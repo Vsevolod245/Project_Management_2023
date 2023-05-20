@@ -161,7 +161,7 @@ volumes:
   sosdb-n1-data:
   sosdb-n2-data:
   proxysql-data:
-  casche:
+  cache:
 
 networks:
   sos-network:
