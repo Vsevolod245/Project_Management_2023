@@ -421,4 +421,32 @@ namespace database
         std::string message = ss.str();
         database::Cache::get().put(_id, message);
     }
+    void User::clear_all()
+    {
+        Poco::Data::Session session = database::Database::get().create_session();
+
+        try
+        {
+            Statement drop_seqs(session);
+            drop_seqs <<"drop table Seqs;",now;
+        }
+        catch (std::exception&)
+        {
+           //nothing
+        }
+
+        Statement create_seqs(session);
+        create_seqs <<"create table IF NOT EXISTS Seqs(id int not null primary key auto_increment);",now;
+
+        for (auto &hint : database::Database::get_all_hints())
+        {
+            Statement create_stmt(session);
+
+            create_stmt << "TRUNCATE TABLE `User`; "
+                        << hint,
+                now;
+            
+            std::cout << create_stmt.toString() << std::endl;
+        }
+    }
 }
