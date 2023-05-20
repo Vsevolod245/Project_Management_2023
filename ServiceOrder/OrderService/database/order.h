@@ -16,7 +16,7 @@ namespace database
         public:
             static void init();
             Poco::JSON::Object::Ptr toJSON() const;
-            static void add_service_to_order(long service_id, long user_id);
+            static Order add_service_to_order(long service_id, long user_id);
             static std::vector<Order> get_order(long user_id);
     };
 }

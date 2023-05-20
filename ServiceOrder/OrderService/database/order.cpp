@@ -55,17 +55,20 @@ namespace database
         return root;
     }
 
-    static void add_service_to_order(long service_id, long user_id)
+    Order Order:: add_service_to_order(long service_id, long user_id)
     {
         try
         {
             Poco::Data::Session session = database::Database::get().create_session();
             Poco::Data::Statement insert(session);
-
+            Order order;
             insert << "INSERT INTO `Order` (user_id, service_id) VALUES(?, ?)",
                 use(user_id),
                 use(service_id);
             insert.execute();
+            order.user_id = user_id;
+            order.service_id = service_id;
+            return order;
         }
         catch (Poco::Data::MySQL::ConnectionException &e)
         {

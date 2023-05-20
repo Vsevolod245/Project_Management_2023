@@ -90,11 +90,12 @@ public:
             {
                 long user_id = atol(form.get("user_id").c_str());
                 long service_id = atol(form.get("service_id").c_str()); 
-                database::Order::add_service_to_order(service_id,user_id);
+                database::Order result = database::Order::add_service_to_order(service_id,user_id);
                 response.setStatus(Poco::Net::HTTPResponse::HTTP_OK);
                 response.setChunkedTransferEncoding(true);
                 response.setContentType("application/json");
-                response.send();
+                std::ostream &ostr = response.send();
+                Poco::JSON::Stringifier::stringify(result.toJSON(), ostr);
                 return;
             }
             else if (hasSubstr(request.getURI(), "/get_order") &&
@@ -127,7 +128,7 @@ public:
         root->set("title", "Internal exception");
         root->set("status", Poco::Net::HTTPResponse::HTTPStatus::HTTP_NOT_FOUND);
         root->set("detail", "Request not found");
-        root->set("instance", "/order");
+        root->set("instance", "/OrderService");
         std::ostream &ostr = response.send();
         Poco::JSON::Stringifier::stringify(root, ostr);
     }
