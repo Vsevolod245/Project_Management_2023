@@ -25,7 +25,11 @@ namespace database{
     Poco::Data::Session Database::create_session(){
        return Poco::Data::Session(Poco::Data::SessionFactory::instance().create(Poco::Data::MySQL::Connector::KEY, _connection_string));
     }
-    
+
+    size_t Database::get_max_shard(){
+        return 1;
+    }
+
     std::vector<std::string> Database::get_all_hints(){
         std::vector<std::string> result;
         for(size_t i=0;i<=get_max_shard();++i){
